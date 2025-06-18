@@ -565,9 +565,9 @@ npm audit fix
 ### Entwicklungsteam
 
 - **Projektleitung**: Gruppe Gilgen
-- **Frontend-Entwicklung**: [Name]
-- **Backend-Entwicklung**: [Name]
-- **UI/UX Design**: [Name]
+- **Frontend-Entwicklung**: Nick
+- **Backend-Entwicklung**: Mike
+- **UI/UX Design**: Lorin
 
 ### Beitrag leisten
 
@@ -593,8 +593,8 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert. Weitere Details finden Sie i
 ### Kontakt
 
 - **E-Mail**: support@accessmanagement-gibb.com
-- **Issue Tracker**: [GitHub Issues](https://github.com/your-username/AccessManagement_Gibb_M306/issues)
-- **Dokumentation**: [Wiki](https://github.com/your-username/AccessManagement_Gibb_M306/wiki)
+- **Issue Tracker**: GitHub Issues](https://github.com/nickoderso/AccessManagement_Gibb_M306/issues)
+- **Dokumentation**: [Wiki](https://github.com/nickoderso/AccessManagement_Gibb_M306/wiki)
 
 ### FAQ
 
@@ -604,11 +604,8 @@ A: Verwenden Sie das Registrierungsformular oder fügen Sie Benutzer direkt übe
 **F: Wie kann ich Berechtigungen verwalten?**
 A: Navigieren Sie zum Dashboard, wählen Sie einen Benutzer aus und verwenden Sie den Permission Selector.
 
-**F: Unterstützt das System Single Sign-On (SSO)?**
-A: Derzeit unterstützt das System Firebase Authentication. SSO-Integration ist für zukünftige Versionen geplant.
-
 ---
 
-**Entwickelt mit ❤️ von Gruppe Gilgen für das Modul M306**
+**Entwickelt von Gruppe Gilgen für das Modul M306**
 
 > Diese Anwendung wurde als Teil des Moduls M306 entwickelt und dient der praktischen Anwendung moderner Webentwicklungs-Technologien im Bereich Access Management.
