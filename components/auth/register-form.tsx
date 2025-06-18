@@ -1,66 +1,74 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
-import { auth, db } from "@/lib/firebase"
-import { doc, setDoc } from "firebase/firestore"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { useNotification } from "@/components/notification-provider"
-import Link from "next/link"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useNotification } from "@/components/notification-provider";
+import Link from "next/link";
 
 export function RegisterForm() {
-  const [displayName, setDisplayName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  // Fallback notification function if provider is not available
   const useNotificationFallback = () => {
     return {
       showNotification: (notification: any) => {
-        console.log("Notification (fallback):", notification)
+        console.log("Notification (fallback):", notification);
       },
-    }
-  }
+    };
+  };
 
-  // Try to use the notification context, fall back to dummy implementation if not available
-  const notificationContext = useNotification() || useNotificationFallback()
-  const { showNotification } = notificationContext
+  const notificationContext = useNotification() || useNotificationFallback();
+  const { showNotification } = notificationContext;
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
-    // Passwort-Validierung
     if (password !== confirmPassword) {
-      setError("Die Passwörter stimmen nicht überein.")
-      return
+      setError("Die Passwörter stimmen nicht überein.");
+      return;
     }
 
     if (password.length < 6) {
-      setError("Das Passwort muss mindestens 6 Zeichen lang sein.")
-      return
+      setError("Das Passwort muss mindestens 6 Zeichen lang sein.");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       // Benutzer erstellen
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
 
       // Anzeigename aktualisieren
-      await updateProfile(user, { displayName })
+      await updateProfile(user, { displayName });
 
       // Benutzerdaten in Firestore speichern
       await setDoc(doc(db, "users", user.uid), {
@@ -68,35 +76,34 @@ export function RegisterForm() {
         displayName,
         email,
         createdAt: new Date().toISOString(),
-        role: "user", // Standardrolle
-      })
+        role: "user",
+      });
 
       showNotification({
         title: "Registrierung erfolgreich",
         message: "Ihr Konto wurde erfolgreich erstellt.",
         type: "success",
         duration: 3000,
-      })
+      });
 
-      // Weiterleitung zum Dashboard
-      router.push("/dashboard")
+      router.push("/dashboard");
     } catch (error: any) {
-      console.error("Registration error:", error)
-      let errorMessage = "Bei der Registrierung ist ein Fehler aufgetreten."
+      console.error("Registration error:", error);
+      let errorMessage = "Bei der Registrierung ist ein Fehler aufgetreten.";
 
       if (error.code === "auth/email-already-in-use") {
-        errorMessage = "Diese E-Mail-Adresse wird bereits verwendet."
+        errorMessage = "Diese E-Mail-Adresse wird bereits verwendet.";
       } else if (error.code === "auth/invalid-email") {
-        errorMessage = "Ungültige E-Mail-Adresse."
+        errorMessage = "Ungültige E-Mail-Adresse.";
       } else if (error.code === "auth/weak-password") {
-        errorMessage = "Das Passwort ist zu schwach."
+        errorMessage = "Das Passwort ist zu schwach.";
       }
 
-      setError(errorMessage)
+      setError(errorMessage);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -165,11 +172,14 @@ export function RegisterForm() {
       <CardFooter className="flex justify-center">
         <p className="text-sm text-muted-foreground">
           Bereits registriert?{" "}
-          <Link href="/login" className="font-medium text-primary hover:underline">
+          <Link
+            href="/login"
+            className="font-medium text-primary hover:underline"
+          >
             Anmelden
           </Link>
         </p>
       </CardFooter>
     </Card>
-  )
+  );
 }

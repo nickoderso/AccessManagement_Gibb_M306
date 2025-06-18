@@ -41,7 +41,6 @@ function DashboardContent() {
     if (user && !isInitialized) {
       const initializeData = async () => {
         try {
-          // Prüfe, ob lokale Daten migriert werden müssen
           const hasLocalData = localStorage.getItem("orgEntities") !== null;
 
           if (hasLocalData) {

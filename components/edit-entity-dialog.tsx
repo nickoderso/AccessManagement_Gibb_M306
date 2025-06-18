@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { useOrgStore } from "@/lib/store"
-import { type Entity, EntityType } from "@/lib/types"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import { useOrgStore } from "@/lib/store";
+import { type Entity, EntityType } from "@/lib/types";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -17,85 +17,89 @@ import {
   DialogTabsList,
   DialogTabTrigger,
   DialogTabContent,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { PermissionSelector } from "@/components/permission-selector"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { PermissionSelector } from "@/components/permission-selector";
 
 // Füge den Import für useNotification hinzu
-import { useNotification } from "@/components/notification-provider"
+import { useNotification } from "@/components/notification-provider";
 
 interface EditEntityDialogProps {
-  isOpen: boolean
-  onClose: () => void
-  entity: Entity
+  isOpen: boolean;
+  onClose: () => void;
+  entity: Entity;
 }
 
-export function EditEntityDialog({ isOpen, onClose, entity }: EditEntityDialogProps) {
-  const { updateEntity } = useOrgStore()
-  const [name, setName] = useState(entity.name)
-  const [role, setRole] = useState(entity.role || "")
-  const [activeTab, setActiveTab] = useState("details")
+export function EditEntityDialog({
+  isOpen,
+  onClose,
+  entity,
+}: EditEntityDialogProps) {
+  const { updateEntity } = useOrgStore();
+  const [name, setName] = useState(entity.name);
+  const [role, setRole] = useState(entity.role || "");
+  const [activeTab, setActiveTab] = useState("details");
 
-  // Füge den Hook in der Komponente hinzu
-  const { showNotification } = useNotification()
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     if (isOpen) {
-      setName(entity.name)
-      setRole(entity.role || "")
-      setActiveTab("details")
+      setName(entity.name);
+      setRole(entity.role || "");
+      setActiveTab("details");
     }
-  }, [isOpen, entity])
+  }, [isOpen, entity]);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (name.trim()) {
       updateEntity({
         ...entity,
         name: name.trim(),
         role: role.trim() || undefined,
-      })
+      });
 
-      // Suche nach der handleSubmit-Funktion und füge am Ende vor dem onClose() hinzu:
       showNotification({
         title: `${getEntityTypeName()} aktualisiert`,
         message: `${name.trim()} wurde erfolgreich aktualisiert.`,
         type: "success",
         duration: 3000,
-      })
+      });
 
-      onClose()
+      onClose();
     }
-  }
+  };
 
   const getEntityTypeName = (): string => {
     switch (entity.type) {
       case EntityType.COMPANY:
-        return "Unternehmen"
+        return "Unternehmen";
       case EntityType.SUBCOMPANY:
-        return "Tochterunternehmen"
+        return "Tochterunternehmen";
       case EntityType.DEPARTMENT:
-        return "Abteilung"
+        return "Abteilung";
       case EntityType.TEAM:
-        return "Team"
+        return "Team";
       case EntityType.EMPLOYEE:
-        return "Mitarbeiter"
+        return "Mitarbeiter";
       default:
-        return ""
+        return "";
     }
-  }
+  };
 
-  const showRoleField = entity.type === EntityType.EMPLOYEE
-  const showPermissionsTab = entity.type === EntityType.EMPLOYEE
+  const showRoleField = entity.type === EntityType.EMPLOYEE;
+  const showPermissionsTab = entity.type === EntityType.EMPLOYEE;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{getEntityTypeName()} bearbeiten</DialogTitle>
-          <DialogDescription>Bearbeiten Sie die Details für {entity.name}.</DialogDescription>
+          <DialogDescription>
+            Bearbeiten Sie die Details für {entity.name}.
+          </DialogDescription>
         </DialogHeader>
 
         {showPermissionsTab ? (
@@ -103,7 +107,9 @@ export function EditEntityDialog({ isOpen, onClose, entity }: EditEntityDialogPr
             <DialogTabs value={activeTab} onValueChange={setActiveTab}>
               <DialogTabsList className="grid w-full grid-cols-2">
                 <DialogTabTrigger value="details">Details</DialogTabTrigger>
-                <DialogTabTrigger value="permissions">Berechtigungen</DialogTabTrigger>
+                <DialogTabTrigger value="permissions">
+                  Berechtigungen
+                </DialogTabTrigger>
               </DialogTabsList>
 
               <DialogTabContent value="details">
@@ -185,5 +191,5 @@ export function EditEntityDialog({ isOpen, onClose, entity }: EditEntityDialogPr
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
